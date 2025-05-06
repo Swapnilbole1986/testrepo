@@ -1,0 +1,11 @@
+- name: install package
+  hosts: remotehost
+  become: true
+  tasks:
+    - name: copy files
+      ansible.builtin.copy:
+        src: /etc/test.html
+        dest: /etc/
+        owner: root
+        group: student
+        mode: '0644'
