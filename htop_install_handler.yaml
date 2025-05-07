@@ -1,0 +1,14 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Trigger handler
+      ansible.builtin.debug:
+        msg: "Triggering handler to install htop"
+      changed_when: true    
+      notify: install htop
+  handlers:
+   - name: install htop
+     ansible.builtin.package:
+       name: htop
+       state: present
