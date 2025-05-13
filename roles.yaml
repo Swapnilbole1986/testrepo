@@ -4,4 +4,4 @@
   vars_files:
       - vault.yml
   roles:
-   - test
+   - rupeshsingh781.Ansiblerole_publish 
