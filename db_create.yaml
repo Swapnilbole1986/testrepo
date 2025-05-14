@@ -1,0 +1,121 @@
+    - name: Simulate RDS MySQL setup on CentOS
+
+      hosts: remotehost
+
+      vars_files:
+
+        - vault.yml
+
+      become: yes
+
+      vars:
+
+        mysql_root_password: "RootPass123!"
+
+        db_name: "testdb"
+
+        db_user: "dbuser"
+
+        db_user_password: "UserPass123!"
+
+      tasks:
+
+
+        - name: Ensure Python 3 and pip are installed
+
+          yum:
+
+            name:
+
+              - python3
+
+              - python3-pip
+
+            state: present
+
+
+        - name: Install PyMySQL module for Python 3
+
+          pip:
+
+            name: PyMySQL
+
+            executable: pip3
+
+
+        - name: Install MariaDB server
+
+          yum:
+
+            name: mariadb-server
+
+            state: present
+
+
+        - name: Start and enable MariaDB service
+
+          service:
+
+            name: mariadb
+
+            state: started
+
+            enabled: true
+
+        - name: Create .m.cnf
+
+          copy: 
+
+            dest: /root/.my.cnf
+
+            content: |
+
+              [client]
+
+              user=root
+
+              password={{ mysql_root_password }}
+
+              socket=/var/lib/mysql/mysql.sock  
+
+        - name: Set MySQL root password
+
+          mysql_user:
+
+            name: root
+
+            host_all: yes
+
+            password: "{{ mysql_root_password }}"
+
+            login_unix_socket: /var/lib/mysql/mysql.sock
+
+          ignore_errors: true
+          
+        handlers:
+    - name: Restart Docker
+      systemd:
+        name: docker
+        state: restarted
+    
+
+          tasks:
+        - name: Check Mysql is installed
+      command: mysql -V
+      register: mysql_version
+      ignore_errors: yes
+
+    - name: Print mysql version
+      debug:
+        var: mysql_version.stdout
+
+    - name: Get list of process
+      command: >
+      register: mysql_ps_output
+      changed_when: false
+
+    - name: Display mysql status
+      debug:
+        var: mysql_ps_output.stdout_lines
+
+

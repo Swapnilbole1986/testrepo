@@ -1,9 +1,4 @@
----
-- name: Ensure multiple lines exist in a file
-  hosts: all
-  become: true
-  gather_facts: false
-  vars:
+vars:
     config_lines:
       - "[client]"
       - " user=root"
