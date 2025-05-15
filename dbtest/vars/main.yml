@@ -1,2 +1,7 @@
 ---
 # vars file for dbtest
+   mysql_root_password: "RootPass123!"
+   db_name: "testdb"
+   db_user: "dbuser"
+   db_user_password: "UserPass123!"
+
